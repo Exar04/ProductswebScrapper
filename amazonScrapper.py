@@ -8,19 +8,22 @@ headers = {'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Apple
 AmazonSearchBarUrl = 'https://www.amazon.in/s?k='
 MintraSearchBarUrl = 'https://www.myntra.com/'
 FlipkartSearchBarUrl = 'https://www.flipkart.com/search?q='
+SnapdealSearchBarUrl = 'https://www.snapdeal.com/search?keyword='
 
 SearchThis = input("What do want to search : ")
 
 PageAmazon = requests.get(AmazonSearchBarUrl+SearchThis, headers=headers).text
 PageMintra = requests.get(MintraSearchBarUrl+SearchThis, headers= headers).text
-pageFlipkart = requests.get(FlipkartSearchBarUrl+SearchThis, headers=headers).text
+PageFlipkart = requests.get(FlipkartSearchBarUrl+SearchThis, headers=headers).text
+PageSnapdeal = requests.get(SnapdealSearchBarUrl+SearchThis, headers= headers).text
 
 
 soupAmazon = BeautifulSoup(PageAmazon, 'lxml')
 soupMintra = BeautifulSoup(PageMintra, 'lxml')
-soupFlipkart = BeautifulSoup(pageFlipkart, 'lxml')
+soupFlipkart = BeautifulSoup(PageFlipkart, 'lxml')
+soupSnapdeal = BeautifulSoup(PageSnapdeal, 'lxml')
 
-# Getting Link of particular product from main search page
+# Getting Product from Amazon
 outputAmazonMainDiv = soupAmazon.find('div',class_='s-widget-container s-spacing-small s-widget-container-height-small celwidget slot=MAIN template=SEARCH_RESULTS widgetId=search-results_1')
 outputAmazonProductInfo = outputAmazonMainDiv.find('div', class_="a-section")
 AmazonProduct = outputAmazonProductInfo.find('a', class_='a-link-normal s-no-outline')
@@ -29,6 +32,24 @@ AmazonProductName = outputAmazonMainDiv.find('h2').text
 AmazonProductPrice = outputAmazonMainDiv.find('span', class_= 'a-price').find('span').text
 AmazonProductLink ='https://www.amazon.in/' + AmazonProduct['href']
 
-print(AmazonProductName)
-print(AmazonProductPrice)
-print(AmazonProductLink)
+
+# Getting Product from Snapdeal
+outputSnapdealMainDiv = soupSnapdeal.find('div', class_= 'product-tuple-listing')
+SnapdealProductLink = outputSnapdealMainDiv.find('a')['href']
+SnapdealProductImg = outputSnapdealMainDiv.find('img')
+SnapdealProductName = outputSnapdealMainDiv.find('p').text
+SnapdealProductPrice = outputSnapdealMainDiv.find('div', class_= 'product-price-row').find('span').text
+
+
+# Getting Product from Flipkart
+outputFlipkartMainDiv = soupFlipkart.find('div',class_="_13oc-S")
+
+# FlipkartProductName = outputFlipkartMainDiv.find('div', class_= '_4rR01T')
+# FlipkartProductPrice = outputFlipkartMainDiv.find('span', class_= 'a-price').find('span').text
+# FlipkartProductLink ='https://www.flipkart.com/' + FlipkartProduct['href']
+# FilpkartImgLink = FlipkartProduct.find('img')
+
+
+# print(AmazonProductName)
+# print(AmazonProductPrice)
+# print(AmazonProductLink)
